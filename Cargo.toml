@@ -1,0 +1,8 @@
+[package]
+name = "git-version"
+version = "0.1.0"
+authors = ["Ceri Storey <ceri@lshift.net>"]
+
+[dependencies]
+git2 = { version = "*", default-features = false, features = [] }
+quick-error = "0.1.4"
