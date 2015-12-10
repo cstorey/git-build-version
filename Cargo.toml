@@ -1,8 +1,8 @@
 [package]
-name = "git-version"
+name = "git-build-version"
 version = "0.1.0"
-authors = ["Ceri Storey <ceri@lshift.net>"]
+authors = ["Ceri Storey <packages@ceri.storey.name>"]
 
 [dependencies]
-git2 = { version = "*", default-features = false, features = [] }
+git2 = { version = "0.3.3", default-features = false, features = [] }
 quick-error = "0.1.4"
