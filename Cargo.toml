@@ -2,6 +2,9 @@
 name = "git-build-version"
 version = "0.1.0"
 authors = ["Ceri Storey <packages@ceri.storey.name>"]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/cstorey/git-build-version/"
 
 [dependencies]
 git2 = { version = "0.3.3", default-features = false, features = [] }
