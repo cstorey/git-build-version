@@ -1,7 +1,7 @@
 extern crate git2;
 #[macro_use]
 extern crate quick_error;
-use git2::{Repository, Tag, Commit, DescribeOptions};
+use git2::{Repository, DescribeOptions};
 use std::env;
 use std::convert::AsRef;
 use std::fs::File;
@@ -28,7 +28,7 @@ pub fn write_version <P: AsRef<Path>>(topdir: P) -> Result<(), Error> {
     let path = path.join("version.rs");
     let mut file = BufWriter::new(try!(File::create(&path)));
 
-    let repo = try!(Repository::open("../.."));
+    let repo = try!(Repository::open(topdir));
     let desc = try!(repo.describe(&DescribeOptions::new()));
     try!(writeln!(file, r#"static VERSION: &'static str = {:?};"#, desc.format(None).unwrap()));
     Ok(())
