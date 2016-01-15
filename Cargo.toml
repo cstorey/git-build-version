@@ -1,6 +1,7 @@
 [package]
 name = "git-build-version"
-version = "0.1.0"
+description = "Allows easy inclusion of the git repository version in your project"
+version = "0.1.1"
 authors = ["Ceri Storey <packages@ceri.storey.name>"]
 license = "MIT"
 readme = "README.md"
