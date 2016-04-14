@@ -8,5 +8,5 @@ readme = "README.md"
 repository = "https://github.com/cstorey/git-build-version/"
 
 [dependencies]
-git2 = { version = "0.3.3", default-features = false, features = [] }
+git2 = { version = "0.4", default-features = false, features = [] }
 quick-error = "0.1.4"
