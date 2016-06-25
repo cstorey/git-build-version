@@ -11,13 +11,13 @@ name = "my-lovely-package"
 build = "build.rs"
 
 [build-dependencies]
-git-version = "*"
+git-build-version = "*"
 ```
 
 In `build.rs`:
 
 ```
-extern crate git_version;
+extern crate git_build_version;
 
 const PACKAGE_TOP_DIR : &'static str = ".";
 
