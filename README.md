@@ -4,7 +4,7 @@ Makes it easy to include a version (as provided by `git describe`) in your crate
 
 In `Cargo.toml`:
 
-```
+```toml
 [package]
 name = "my-lovely-package"
 # ...
@@ -16,7 +16,7 @@ git-build-version = "*"
 
 In `build.rs`:
 
-```
+```rust
 extern crate git_build_version;
 
 const PACKAGE_TOP_DIR : &'static str = ".";
@@ -28,7 +28,7 @@ fn main() {
 
 This will write out a file named `version.rs` that can be included into your source as follows. Eg: in your `src/main.rs`:
 
-```
+```rust
 include!(concat!(env!("OUT_DIR"), "/version.rs"));
 
 fn main() {
