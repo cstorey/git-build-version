@@ -14,6 +14,9 @@ build = "build.rs"
 git-build-version = "*"
 ```
 
+## Using compile-time environment variable (since Rust 1.19)
+
+
 In `build.rs`:
 
 ```
@@ -22,7 +25,28 @@ extern crate git_build_version;
 const PACKAGE_TOP_DIR : &'static str = ".";
 
 fn main() {
-    git_version::write_version(PACKAGE_TOP_DIR).expect("Saving git version");
+    git_build_version::print_version(PACKAGE_TOP_DIR).expect("Cannot get git revision");
+}
+```
+In your source files, eg: in your `src/main.rs`:
+```
+fn main() {
+    println!("Version: {} Build: {}", env!("CARGO_PKG_VERSION"), env!("GIT_SHA_SHORT"));
+}
+```
+
+## Using generated version.rs
+
+
+In `build.rs`:
+
+```
+extern crate git_build_version;
+
+const PACKAGE_TOP_DIR : &'static str = ".";
+
+fn main() {
+    git_version::write_version(PACKAGE_TOP_DIR).expect("Saving git version failed");
 }
 ```
 
