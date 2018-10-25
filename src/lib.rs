@@ -140,5 +140,5 @@ fn generate_rerun_if_changed(git_dir_or_file : PathBuf) -> Result<(), Error> {
 
 #[test]
 fn test() {
-    write_version(".").expect("write version");
+    print_version(".").expect("write version");
 }
