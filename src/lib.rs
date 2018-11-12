@@ -1,6 +1,5 @@
 extern crate git2;
-#[macro_use]
-extern crate quick_error;
+extern crate failure;
 
 use git2::{Repository, DescribeOptions};
 use std::env;
@@ -8,21 +7,7 @@ use std::convert::AsRef;
 use std::fs::{File, create_dir_all};
 use std::io::{Write, Read, BufWriter};
 use std::path::Path;
-
-quick_error! {
-    #[derive(Debug)]
-    pub enum Error {
-        Io(err: std::io::Error) {
-            from()
-        }
-        Git(err: git2::Error) {
-            from()
-        }
-        MissingEnvVar {
-        }
-    }
-}
-
+use failure::Error;
 
 fn same_content_as<P: AsRef<Path>>(path: P, content: &str) -> Result<bool, Error> {
 
@@ -34,7 +19,7 @@ fn same_content_as<P: AsRef<Path>>(path: P, content: &str) -> Result<bool, Error
 }
 
 pub fn write_version <P: AsRef<Path>>(topdir: P) -> Result<(), Error> {
-    let path = try!(env::var_os("OUT_DIR").ok_or(Error::MissingEnvVar));
+    let path = env::var_os("OUT_DIR").ok_or(failure::err_msg("Environment variable $OUT_DIR not found"))?;
     let path : &Path = path.as_ref();
     write_version_into(topdir.as_ref(), path.as_ref())
 }
