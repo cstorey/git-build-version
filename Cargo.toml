@@ -9,8 +9,13 @@ version = "0.1.1"
 
 [dependencies]
 failure = "0.1.3"
+quote = "0.6.10"
+syn = "0.15.20"
 
 [dependencies.git2]
 default-features = false
 features = []
 version = "0.7.5"
+
+[lib]
+proc-macro = true

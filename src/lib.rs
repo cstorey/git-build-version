@@ -1,55 +1,30 @@
 extern crate git2;
 extern crate failure;
+extern crate proc_macro;
+#[macro_use]
+extern crate quote;
+extern crate syn;
+
+use proc_macro::TokenStream;
+
 
 use git2::{Repository, DescribeOptions};
 use std::env;
 use std::convert::AsRef;
-use std::fs::{File, create_dir_all};
-use std::io::{Write, Read, BufWriter};
 use std::path::Path;
 use failure::Error;
 
-fn same_content_as<P: AsRef<Path>>(path: P, content: &str) -> Result<bool, Error> {
-
-    let mut f = try!(File::open(path));
-    let mut current = String::new();
-    try!(f.read_to_string(&mut current));
-
-    Ok(current == content)
+#[proc_macro]
+pub fn git_version(input: TokenStream) -> TokenStream {
+    let name : syn::Ident = syn::parse(input).expect("parse identifier");
+    let vers = repository_version(".").expect("fetch git version");
+    quote!(const #name : &'static str = #vers;).into()
 }
 
-pub fn write_version <P: AsRef<Path>>(topdir: P) -> Result<(), Error> {
-    let path = env::var_os("OUT_DIR").ok_or(failure::err_msg("Environment variable $OUT_DIR not found"))?;
-    let path : &Path = path.as_ref();
-    write_version_into(topdir.as_ref(), path.as_ref())
-}
-
-
-pub fn write_version_into(topdir: &Path, path: &Path) -> Result<(), Error> {
-    try!(create_dir_all(path));
-
-    let verfile = path.join("version.rs");
-    let repo = try!(Repository::discover(topdir));
-    let desc = try!(repo.describe(&DescribeOptions::new().describe_tags().show_commit_oid_as_fallback(true)));
-
-
-    let content = format!("static VERSION: &'static str = {:?};\n", try!(desc.format(None)));
-
-    let is_fresh = if verfile.exists() {
-        try!(same_content_as(&verfile, &content))
-    } else {
-        false
-    };
-
-    if !is_fresh {
-      let mut file = BufWriter::new(try!(File::create(&verfile)));
-
-      try!(write!(file, "{}", content));
-    }
-    Ok(())
-}
-
-#[test]
-fn test() {
-    write_version_into(Path::new("."), Path::new("/tmp/git-build-version")).expect("write version");
+fn repository_version<P: AsRef<Path>>(topdir: P) -> Result<String, Error> {
+    let mut options = DescribeOptions::new();
+    options.describe_tags().show_commit_oid_as_fallback(true);
+    let repo = Repository::discover(topdir)?;
+    let descr = repo.describe(&options)?;
+    Ok(descr.format(None)?)
 }
